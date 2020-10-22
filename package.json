@@ -25,7 +25,6 @@
     "typescript": "^4.0.3"
   },
   "dependencies": {
-    "mri": "^1.1.6",
     "node-id3": "^0.1.19"
   }
 }
