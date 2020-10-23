@@ -22,10 +22,10 @@ yarn install
 
 ## Usage
 
-This app assumes artists will be seperated by a `,`, `&`, or `x`. It also grabs any `feat.` artists.
+This app assumes artists will be seperated by a `,`, `&`, `x`, or `and`. It also grabs any `feat.` artists included in the artist tag.
 
 ```
-Artist 1, Artist 2 & Artist 3 x Artist 4 feat. Artist 5, Artist 6
+Artist 1, Artist 2 & Artist 3 x Artist 4 feat. Artist 5 and Artist 6
 ->
 Artist 1/Artist 2/Artist 3/Artist 4/Artist 5/Artist 6
 ```

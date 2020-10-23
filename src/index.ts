@@ -93,16 +93,27 @@ function processArtists(remainingArtists: string) {
         break
       }
 
-      artists = artists.concat("", `${match[0].trim()}`)
+      const artist = match[0].trim()
+      artists += removeSlashFromArtist(artist)
 
       break
     }
 
-    artists = artists.concat("", `${match[1].trim()}/`)
+    const artist = match[1].trim()
+    artists += `${removeSlashFromArtist(artist)}/`
+
     remainingArtists = match[3]
   }
 
   return artists
+}
+
+function removeSlashFromArtist(artist: string) {
+  if (artist.includes("/")) {
+    return (artist = artist.replace(/\//g, ""))
+  }
+
+  return artist
 }
 
 async function getIgnoreList(): Promise<string[]> {
