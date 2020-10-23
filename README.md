@@ -34,7 +34,9 @@ Artist 1; Artist 2; Artist 3; Artist 4; Artist 5; Artist 6
 
 Place files to be processed into `unprocessed`.
 
-Files will be moved to `processed` after being updated.
+Files are moved to `processed` after being updated.
+
+Ignored files are moved to `ignored`.
 
 #### changes.txt
 

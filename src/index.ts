@@ -54,7 +54,6 @@ async function run() {
 }
 
 function updateTags(file: string, remainingArtists: string, ignoreList: string[], artist: string) {
-
   const inFilePath = unprocessedPath + file
   const outFilePath = processedPath + file
   const ignoredFilePath = ignoredPath + file
@@ -125,7 +124,6 @@ async function getIgnoreList(): Promise<string[]> {
 
 function shouldIgnore(ignoreList: string[], artists: string) {
   for (const ignore of ignoreList) {
-
     if (artists.toLowerCase().includes(ignore.toLowerCase())) {
       return true
     }
