@@ -62,7 +62,7 @@ yarn launch
 2. Apply changes.
 
 ```
-yarn start -u
+yarn launch -u
 ```
 
 Any skipped files will remain in `unprocessed` where you can handle them manually.
