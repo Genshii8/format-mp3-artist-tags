@@ -42,7 +42,7 @@ After running the app, view this file to see what changes are being made to arti
 
 #### ignore.txt
 
-Use this if you want to skip files by certain artists. This is primarly used for artists that have parts of their name seperated by `,`, `&`, or `x`. If a file contains *any* artist in `ignore.txt`, it will be skipped completely. Place each artist on its own line.
+Use this if you want to skip files by certain artists. This is primarly used for artists that have parts of their name seperated by `,`, `&`, or `x`. If a file contains _any_ artist in `ignore.txt`, it will be skipped completely. Place each artist on its own line.
 
 ```
 // ignore.txt
@@ -56,7 +56,7 @@ Tist x Ar
 1. Generate list of changes. Running the app without the `-u` flag will not make any changes to your files.
 
 ```
-yarn start
+yarn launch
 ```
 
 2. Apply changes.

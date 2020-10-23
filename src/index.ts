@@ -22,6 +22,11 @@ async function run() {
   const files = fs.readdirSync(unprocessedPath)
 
   for (const file of files) {
+
+    if (file == ".keep") {
+      continue
+    }
+
     const artist = id3.read(unprocessedPath + file).artist
 
     if (!artist) {
