@@ -22,10 +22,7 @@ async function run() {
   const files = fs.readdirSync(unprocessedPath)
 
   for (const file of files) {
-
-    if (file == ".keep") {
-      continue
-    }
+    if (file == ".keep") continue
 
     const artist = id3.read(unprocessedPath + file).artist
 
@@ -45,18 +42,18 @@ async function run() {
       }
 
       const remainingArtists = `${match[1]}, ${match[2]}`
-      updateTags(file, remainingArtists, ignoreList)
+      updateTags(file, remainingArtists, ignoreList, artist)
 
       continue
     }
 
     const remainingArtists = `${featMatch[1]}, ${featMatch[3]}`
-    updateTags(file, remainingArtists, ignoreList)
+    updateTags(file, remainingArtists, ignoreList, artist)
   }
 }
 
-function updateTags(file: string, remainingArtists: string, ignoreList: string[]) {
-  if (shouldIgnore(remainingArtists, ignoreList)) {
+function updateTags(file: string, remainingArtists: string, ignoreList: string[], artist: string) {
+  if (shouldIgnore(ignoreList, artist)) {
     console.log(`Skipping "${file}". It contains an artist in your ignore list.`)
     return
   }
@@ -64,11 +61,10 @@ function updateTags(file: string, remainingArtists: string, ignoreList: string[]
   const inputPath = unprocessedPath + file
   const outputPath = processedPath + file
 
-  const before = id3.read(inputPath).artist
   const artists = processArtists(remainingArtists)
   const tags = { artist: artists }
 
-  fs.appendFileSync(changesPath, `${before} -> ${artists}\n\n`)
+  fs.appendFileSync(changesPath, `${artist} -> ${artists}\n\n`)
 
   if (updateFiles) {
     id3.update(tags, inputPath)
@@ -120,17 +116,15 @@ async function getIgnoreList(): Promise<string[]> {
   return ignore
 }
 
-function shouldIgnore(remainingArtists: string, ignoreList: string[]) {
-  let shouldIgnore = false
-
+function shouldIgnore(ignoreList: string[], artists: string) {
   for (const ignore of ignoreList) {
-    if (remainingArtists.toLowerCase().includes(ignore.toLowerCase())) {
-      shouldIgnore = true
-      break
+
+    if (artists.toLowerCase().includes(ignore.toLowerCase())) {
+      return true
     }
   }
 
-  return shouldIgnore
+  return false
 }
 
 run()
