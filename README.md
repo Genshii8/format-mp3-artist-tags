@@ -30,7 +30,7 @@ Artist 1, Artist 2 & Artist 3 x Artist 4 feat. Artist 5, Artist 6
 Artist 1; Artist 2; Artist 3; Artist 4; Artist 5; Artist 6
 ```
 
-### app folder
+### "app" folder
 
 Place files to be processed into `unprocessed`.
 
