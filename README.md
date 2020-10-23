@@ -4,7 +4,7 @@ Changes artist tags on mp3 files (or anything with ID3 tags) to the "proper" for
 
 Music apps will often list the same artist as a seperate artist if a particular track has multiple artists. For example, say you have a track by `Artist 1` and another track by `Artist 1 & Artist 2`. If you wanted to look at all the tracks by `Artist 1`, the track by `Artist 1 & Artist 2` wouldn't show up and would be under its own artist entry.
 
-This app fixes that by changing the artist tag to a list of artists seperated by semicolons. e.g. `Artist 1; Artist 2`.
+This app fixes that by changing the artist tag to a list of artists seperated by forward slashes. e.g. `Artist 1/Artist 2`.
 
 ## Installation
 
@@ -27,8 +27,10 @@ This app assumes artists will be seperated by a `,`, `&`, or `x`. It also grabs 
 ```
 Artist 1, Artist 2 & Artist 3 x Artist 4 feat. Artist 5, Artist 6
 ->
-Artist 1; Artist 2; Artist 3; Artist 4; Artist 5; Artist 6
+Artist 1/Artist 2/Artist 3/Artist 4/Artist 5/Artist 6
 ```
+
+Note: If you look at the tags of a processed file via something like Windows Explorer, you will see artists seperated by semicolons, not slashes. This is normal. The artists are still separated by slashes in the actual tag data.
 
 ### "app" folder
 
