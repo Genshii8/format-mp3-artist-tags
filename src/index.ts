@@ -1,19 +1,20 @@
 import mri from "mri"
 import fs from "fs"
 import readline from "readline"
-import id3, { update } from "node-id3"
+import id3 from "node-id3"
 
 const argv = process.argv.slice(2)
 const options = mri(argv)
 const updateFiles = options.u
 
-const unprocessedPath = "unprocessed/"
-const processedPath = "processed/"
+const unprocessedPath = "app/unprocessed/"
+const processedPath = "app/processed/"
+const changesPath = "app/changes.txt"
 
 const artistRegex = new RegExp(/(.+?)[,&x] (.+)/)
 const featRegex = new RegExp(/(.+)( feat | feat\. )(.+)/i)
 
-fs.writeFileSync("output.txt", "")
+fs.writeFileSync(changesPath, "")
 
 async function run() {
   const ignoreList = await getIgnoreList()
@@ -21,20 +22,20 @@ async function run() {
   const files = fs.readdirSync(unprocessedPath)
 
   for (const file of files) {
-    const tags = id3.read(unprocessedPath + file)
+    const artist = id3.read(unprocessedPath + file).artist
 
-    if (!tags.artist) {
+    if (!artist) {
       console.log(`"${file}" has no artist.`)
       continue
     }
 
-    const featMatch = tags.artist.match(featRegex)
+    const featMatch = artist.match(featRegex)
 
     if (!featMatch) {
-      const match = tags.artist.match(artistRegex)
+      const match = artist.match(artistRegex)
 
       if (!match) {
-        console.log(`Skipping "${file}". It only has one artist.`)
+        console.log(`Skipping "${file}". It only has one artist: ${artist}`)
         continue
       }
 
@@ -62,7 +63,7 @@ function updateTags(file: string, remainingArtists: string, ignoreList: string[]
   const artists = processArtists(remainingArtists)
   const tags = { artist: artists }
 
-  fs.appendFileSync("output.txt", `${before} -> ${artists}\n\n`)
+  fs.appendFileSync(changesPath, `${before} -> ${artists}\n\n`)
 
   if (updateFiles) {
     id3.update(tags, inputPath)
@@ -77,22 +78,22 @@ function processArtists(remainingArtists: string) {
   let artists = ""
 
   while (true) {
-    let artist = remainingArtists.match(artistRegex)
+    let match = remainingArtists.match(artistRegex)
 
-    if (!artist) {
-      artist = remainingArtists.match(/.+/)
+    if (!match) {
+      match = remainingArtists.match(/.+/)
 
-      if (!artist) {
+      if (!match) {
         break
       }
 
-      artists = artists.concat("", `${artist[0].trim()};`)
+      artists = artists.concat("", `${match[0].trim()};`)
 
       break
     }
 
-    artists = artists.concat("", `${artist[1].trim()}; `)
-    remainingArtists = artist[2]
+    artists = artists.concat("", `${match[1].trim()}; `)
+    remainingArtists = match[2]
   }
 
   return artists
@@ -100,7 +101,7 @@ function processArtists(remainingArtists: string) {
 
 async function getIgnoreList(): Promise<string[]> {
   const ignore: string[] = []
-  const fileStream = fs.createReadStream("ignore.txt")
+  const fileStream = fs.createReadStream("app/ignore.txt")
 
   const rl = readline.createInterface({
     input: fileStream,
