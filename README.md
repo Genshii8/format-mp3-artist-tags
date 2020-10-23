@@ -2,7 +2,7 @@
 
 Changes artist tags on mp3 files (or anything with ID3 tags) to the "proper" format when there are multiple artists.
 
-Music apps will often list the same artist as a seperate artist if a particular track has multiple artists. For example, say you have a track by `Artist 1` and another track by `Artist 1 & Artist 2`. If you wanted to look at all the tracks by `Artist 1`, the track by `Artist 1 & Artist 2` wouldn't show up and would be under its own artist entry.
+Music apps will often list the same artist as a separate artist if a particular track has multiple artists. For example, say you have a track by `Artist 1` and another track by `Artist 1 & Artist 2`. If you wanted to look at all the tracks by `Artist 1`, the track by `Artist 1 & Artist 2` wouldn't show up and would be under its own artist entry.
 
 This app fixes that by changing the artist tag to a list of artists seperated by forward slashes. e.g. `Artist 1/Artist 2`.
 

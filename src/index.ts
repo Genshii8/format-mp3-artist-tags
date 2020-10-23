@@ -12,7 +12,7 @@ const processedPath = "app/processed/"
 const ignoredPath = "app/ignored/"
 const changesFilePath = "app/changes.txt"
 
-const artistRegex = new RegExp(/(.+?)[,&x] (.+)/)
+const artistRegex = new RegExp(/(.+?)( [&x] |, )(.+)/i)
 const featRegex = new RegExp(/(.+)( feat | feat\. | ft | ft\. )(.+)/i)
 
 fs.writeFileSync(changesFilePath, "")
@@ -42,18 +42,16 @@ async function run() {
         continue
       }
 
-      const remainingArtists = `${match[1]}, ${match[2]}`
-      updateTags(file, remainingArtists, ignoreList, artist)
+      updateTags(file, match, ignoreList, artist)
 
       continue
     }
 
-    const remainingArtists = `${featMatch[1]}, ${featMatch[3]}`
-    updateTags(file, remainingArtists, ignoreList, artist)
+    updateTags(file, featMatch, ignoreList, artist)
   }
 }
 
-function updateTags(file: string, remainingArtists: string, ignoreList: string[], artist: string) {
+function updateTags(file: string, match: RegExpMatchArray, ignoreList: string[], artist: string) {
   const inFilePath = unprocessedPath + file
   const outFilePath = processedPath + file
   const ignoredFilePath = ignoredPath + file
@@ -67,6 +65,7 @@ function updateTags(file: string, remainingArtists: string, ignoreList: string[]
     return
   }
 
+  const remainingArtists = `${match[1]}, ${match[3]}`
   const artists = processArtists(remainingArtists)
   const tags = { artist: artists }
 
@@ -100,7 +99,7 @@ function processArtists(remainingArtists: string) {
     }
 
     artists = artists.concat("", `${match[1].trim()}/`)
-    remainingArtists = match[2]
+    remainingArtists = match[3]
   }
 
   return artists
