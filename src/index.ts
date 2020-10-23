@@ -9,12 +9,13 @@ const updateFiles = options.u
 
 const unprocessedPath = "app/unprocessed/"
 const processedPath = "app/processed/"
-const changesPath = "app/changes.txt"
+const ignoredPath = "app/ignored/"
+const changesFilePath = "app/changes.txt"
 
 const artistRegex = new RegExp(/(.+?)[,&x] (.+)/)
 const featRegex = new RegExp(/(.+)( feat | feat\. )(.+)/i)
 
-fs.writeFileSync(changesPath, "")
+fs.writeFileSync(changesFilePath, "")
 
 async function run() {
   const ignoreList = await getIgnoreList()
@@ -53,23 +54,29 @@ async function run() {
 }
 
 function updateTags(file: string, remainingArtists: string, ignoreList: string[], artist: string) {
+
+  const inFilePath = unprocessedPath + file
+  const outFilePath = processedPath + file
+  const ignoredFilePath = ignoredPath + file
+
   if (shouldIgnore(ignoreList, artist)) {
     console.log(`Skipping "${file}". It contains an artist in your ignore list.`)
+
+    fs.rename(inFilePath, ignoredFilePath, (err) => {
+      if (err) throw err
+    })
     return
   }
-
-  const inputPath = unprocessedPath + file
-  const outputPath = processedPath + file
 
   const artists = processArtists(remainingArtists)
   const tags = { artist: artists }
 
-  fs.appendFileSync(changesPath, `${artist} -> ${artists}\n\n`)
+  fs.appendFileSync(changesFilePath, `${artist} -> ${artists}\n\n`)
 
   if (updateFiles) {
-    id3.update(tags, inputPath)
+    id3.update(tags, inFilePath)
 
-    fs.rename(inputPath, outputPath, (err) => {
+    fs.rename(inFilePath, outFilePath, (err) => {
       if (err) throw err
     })
   }
