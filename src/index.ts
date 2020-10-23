@@ -94,7 +94,7 @@ function processArtists(remainingArtists: string) {
         break
       }
 
-      artists = artists.concat("", `${match[0].trim()};`)
+      artists = artists.concat("", `${match[0].trim()}`)
 
       break
     }
