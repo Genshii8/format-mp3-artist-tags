@@ -11,7 +11,7 @@ This app fixes that by changing the artist tag to a list of artists seperated by
 1. Clone the repo.
 
 ```
-git clone git@github.com:adamhl8/mp3-fix-artist-tags.git
+git clone https://github.com/adamhl8/mp3-fix-artist-tags.git
 ```
 
 2. Install dependencies.
