@@ -64,3 +64,5 @@ yarn start
 ```
 yarn start -u
 ```
+
+Any skipped files will remain in `unprocessed` where you can handle them manually.
