@@ -32,7 +32,7 @@ Artist 1; Artist 2; Artist 3; Artist 4; Artist 5; Artist 6
 
 ### "app" folder
 
-Place files to be processed into `unprocessed`.
+**Place files to be processed into `unprocessed`.**
 
 Files are moved to `processed` after being updated.
 
