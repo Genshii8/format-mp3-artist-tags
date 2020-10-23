@@ -13,7 +13,7 @@ const ignoredPath = "app/ignored/"
 const changesFilePath = "app/changes.txt"
 
 const artistRegex = new RegExp(/(.+?)[,&x] (.+)/)
-const featRegex = new RegExp(/(.+)( feat | feat\. )(.+)/i)
+const featRegex = new RegExp(/(.+)( feat | feat\. | ft | ft\. )(.+)/i)
 
 fs.writeFileSync(changesFilePath, "")
 
