@@ -119,7 +119,7 @@ function shouldIgnore(remainingArtists: string, ignoreList: string[]) {
   let shouldIgnore = false
 
   for (const ignore of ignoreList) {
-    if (remainingArtists.includes(ignore)) {
+    if (remainingArtists.toLowerCase().includes(ignore.toLowerCase())) {
       shouldIgnore = true
       break
     }
