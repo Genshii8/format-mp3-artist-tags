@@ -16,9 +16,10 @@ const mriOptions = {
     u: "update",
     s: "stay",
     m: "move",
-    a: "ignore--slash",
+    a: "ignore-slash",
+    h: "help",
   },
-  boolean: ["t", "u", "s", "m", "a"],
+  boolean: ["t", "u", "s", "m", "a", "h"],
 }
 const options = mri(process.argv.slice(2), mriOptions)
 
@@ -51,8 +52,13 @@ fs.outputFileSync(changesFile, "")
 run()
 
 async function run() {
+  if (options.h) {
+    printHelp()
+    return
+  }
+
   const ignoreList = await getIgnoreList()
-  
+
   const noArtist: string[] = []
 
   const files = walk(inputDir, { directories: false })
@@ -94,11 +100,13 @@ async function run() {
   }
 
   await removeEmptyDirectories(inputDir)
-  for (const file of noArtist) {
-    console.log(file)
+
+  for (const message of noArtist) {
+    console.log(message)
   }
-  for (const file of ignored) {
-    console.log(file)
+
+  for (const message of ignored) {
+    console.log(message)
   }
 }
 
@@ -109,7 +117,9 @@ function updateTags(
   artist: string
 ) {
   if (shouldIgnore(ignoreList, artist)) {
-    ignored.push(`Skipping "${file.fileName}". It contains an artist in your ignore list: ${artist}`)
+    ignored.push(
+      `Skipping "${file.fileName}". It contains an artist in your ignore list: ${artist}`
+    )
 
     if (options.u && !options.s && options.m) {
       fs.moveSync(file.inputFile, file.outputFile)
@@ -136,6 +146,9 @@ function updateTags(
 function processArtists(remainingArtists: string) {
   let artists = ""
 
+  if (shouldRemoveSlashFromArtist(remainingArtists))
+    remainingArtists = removeSlash(remainingArtists)
+
   while (true) {
     let match = remainingArtists.match(artistRegex)
 
@@ -147,14 +160,12 @@ function processArtists(remainingArtists: string) {
       }
 
       const artist = match[0].trim()
-      if (shouldRemoveSlashFromArtist(artist)) removeSlash
       artists += artist
 
       break
     }
 
     const artist = match[1].trim()
-    if (shouldRemoveSlashFromArtist(artist)) removeSlash
     artists += `${artist}/`
 
     remainingArtists = match[3]
@@ -227,4 +238,18 @@ function test() {
   fs.emptyDirSync(ignoredDir)
   fs.outputFileSync(ignoreFile, "Ignore")
   fs.copySync(testFiles, inputDir)
+}
+
+function printHelp() {
+  console.log(`
+  Options:
+
+  -i, --input <path>    specify a folder that contains your input files
+  -o, --output <path>   specify a folder where processed files will be moved to
+  -u, --update          apply changes to files
+  -s, --stay            don't move files after processing (including ignored files)
+  -m, --move            move all files to output directory (including ignored files)
+  -a, --ignore-slash    ignore files where artists have a slash in their name so they can be handled manually
+  -t, --test            copy test_files to input directory
+  `)
 }
