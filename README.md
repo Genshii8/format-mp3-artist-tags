@@ -73,7 +73,7 @@ Note: If you look at the tags of a processed file via something like Windows Exp
 
 ### "app" folder
 
-**Place files to be processed into `files`.**
+<ins>Place files to be processed into `files`.</ins>
 
 Files are moved to `processed` after being updated or skipped.
 
