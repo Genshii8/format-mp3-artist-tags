@@ -48,7 +48,7 @@ Options:
   -u, --update          apply changes to files
   -s, --stay            don't move files after processing (including ignored files)
   -m, --move            move all files to output directory (including ignored files)
-  -a, --ignore-slash    ignore files where artists have a slash in their name so they can be handled manually
+  -a, --ignore-slash    ignore files where artists have a slash in their name
   -t, --test            copy test_files to input directory
   -h, --help            output options
 ```

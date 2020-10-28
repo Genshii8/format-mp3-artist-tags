@@ -1,7 +1,7 @@
 {
-  "name": "mp3-fix-artist-tags",
+  "name": "format-mp3-artist-tags",
   "version": "0.1.0",
-  "repository": "https://github.com/adamhl8/mp3-fix-artist-tags",
+  "repository": "https://github.com/adamhl8/format-mp3-artist-tags",
   "author": "adamhl8",
   "license": "MIT",
   "scripts": {
