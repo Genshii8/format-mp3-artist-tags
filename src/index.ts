@@ -38,7 +38,7 @@ const changesFile = `${baseDir}/changes.txt`
 const ignoreFile = `${baseDir}/ignore.txt`
 const testFiles = "test_files/"
 
-const artistRegex = new RegExp(/(.+?)( [&x×+,] |, | and )(.+)/i)
+const artistRegex = new RegExp(/(.+?)( [&x×+,] |, | and | with )(.+)/i)
 const featRegex = new RegExp(/(.+)( featuring | feat | feat\. | ft | ft\. )(.+)/i)
 
 const ignored: string[] = []

@@ -61,7 +61,7 @@ Some notes about how this app functions:
 - Using the `-o` flag without specifying a directory will move files to a directory named "processed" next to your input directory.
 - Using the `-t` flag will permanently delete all files in the input, output and ignored directories (either the default directories or the ones defined with `-i`/`-o`).
 
-This app assumes artists will be seperated by a `&`, `x`, `×`, `+`, `,`, or `and`. It also grabs any `feat.` artists included in the artist tag.
+This app assumes artists will be seperated by a `&`, `x`, `×`, `+`, `,`, `and`, or `with`. It also grabs any `feat.` artists included in the artist tag.
 
 ```
 Artist 1 & Artist 2 x Artist 3 × Artist 4 feat. Artist 1 + Artist 2, Artist 3 and Artist 4
