@@ -6,8 +6,6 @@ import readline from "readline"
 import path from "path"
 import id3 from "node-id3"
 
-//update readme
-
 const mriOptions = {
   alias: {
     t: "test",

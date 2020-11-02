@@ -26,7 +26,7 @@ yarn install
 
 1. Place files to be processed in "format-mp3-artist-tags/app/files". (Please see below for the available command line options.)
 
-2. Generate list of changes ("changes.txt"). Running the app without the `-u` flag will not make any changes to or move your files.
+2. Generate list of changes ("changes.txt") and view the file to make sure everything is good to go or if anything needs to be ignored. Running the app without the `-u` flag will not make any changes to or move your files.
 
 ```
 yarn launch
