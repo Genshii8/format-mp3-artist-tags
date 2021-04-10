@@ -82,7 +82,8 @@ Options:
   -h, --help            output options
 ```
 
-Generally speaking, if you want to specify an input directory, the command you run will look something like this: `yarn start -i /path/to/directory/ -o -u`.
+Generally speaking, if you want to specify an input directory, the command you run will look something like this:
+`yarn start -i /path/to/directory/ -o -u`
 
 Some notes about how this app functions:
 
