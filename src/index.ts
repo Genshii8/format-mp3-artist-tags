@@ -1,40 +1,41 @@
-import mri from "mri"
-import fs from "fs-extra"
-import fsPromises from "fs/promises"
-import walk from "walk-sync"
-import readline from "readline"
-import path from "path"
-import id3 from "node-id3"
+import fsPromises from 'fs/promises'
+import readline from 'readline'
+import path from 'path'
+import mri from 'mri'
+import fs from 'fs-extra'
+import walk from 'walk-sync'
+import id3 from 'node-id3'
 
 const mriOptions = {
-  alias: {
-    t: "test",
-    i: "input",
-    o: "output",
-    u: "update",
-    s: "stay",
-    m: "move",
-    a: "ignore-slash",
-    h: "help",
-  },
-  boolean: ["t", "u", "s", "m", "a", "h"],
+	alias: {
+		t: 'test',
+		i: 'input',
+		o: 'output',
+		u: 'update',
+		s: 'stay',
+		m: 'move',
+		a: 'ignore-slash',
+		h: 'help'
+	},
+	boolean: ['t', 'u', 's', 'm', 'a', 'h']
 }
 const options = mri(process.argv.slice(2), mriOptions)
 
-const baseDir = "app"
+const baseDir = 'app'
 const baseInputDir = `${baseDir}/files/`
 const baseOutputDir = `${baseDir}/processed/`
 
 const inputDir = path.posix.normalize(
-  (options.i === true && baseInputDir) || (options.i ?? baseInputDir) + "/"
+	(options.i === true && baseInputDir) || `${(options.i as string) ?? baseInputDir}/`
 )
+
 const outputDir = path.posix.normalize(
-  (options.o === true && `${inputDir}../processed/`) || (options.o ?? baseOutputDir) + "/"
+	(options.o === true && `${inputDir}../processed/`) || `${(options.o as string) ?? baseOutputDir}/`
 )
 const ignoredDir = path.posix.normalize(`${inputDir}../ignored/`)
 const changesFile = `${baseDir}/changes.txt`
 const ignoreFile = `${baseDir}/ignore.txt`
-const testFiles = "test_files/"
+const testFiles = 'test_files/'
 
 const artistRegex = new RegExp(/(.+?)( [&x×+,] |, | and | with )(.+)/i)
 const featRegex = new RegExp(/(.+)( featuring | feat | feat\. | ft | ft\. )(.+)/i)
@@ -45,201 +46,203 @@ if (options.t) test()
 
 fs.ensureFileSync(`${baseInputDir}.keep`)
 fs.ensureFileSync(ignoreFile)
-fs.outputFileSync(changesFile, "")
+fs.outputFileSync(changesFile, '')
 
-run()
+await run()
 
 async function run() {
-  if (options.h) {
-    printHelp()
-    return
-  }
+	if (options.h) {
+		printHelp()
+		return
+	}
 
-  const ignoreList = await getIgnoreList()
+	const ignoreList = await getIgnoreList()
 
-  const noArtist: string[] = []
+	const noArtist: string[] = []
 
-  const files = walk(inputDir, { directories: false })
+	const files = walk(inputDir, {directories: false})
 
-  for (const filePath of files) {
-    const file = {
-      fileName: path.posix.basename(filePath),
-      inputFile: inputDir + filePath,
-      outputFile: outputDir + filePath,
-      ignoredFile: ignoredDir + filePath,
-    }
+	for (const filePath of files) {
+		const file = {
+			fileName: path.posix.basename(filePath),
+			inputFile: inputDir + filePath,
+			outputFile: outputDir + filePath,
+			ignoredFile: ignoredDir + filePath
+		}
 
-    if (file.fileName == ".keep") continue
+		if (file.fileName === '.keep') continue
 
-    const artist = id3.read(file.inputFile).artist
+		const artist = id3.read(file.inputFile).artist
 
-    if (!artist) {
-      noArtist.push(`"${file.fileName}" has no artist.`)
-      continue
-    }
+		if (!artist) {
+			noArtist.push(`"${file.fileName}" has no artist.`)
+			continue
+		}
 
-    const featMatch = artist.match(featRegex)
+		const featMatch = featRegex.exec(artist)
 
-    if (!featMatch) {
-      const match = artist.match(artistRegex)
+		if (!featMatch) {
+			const match = artistRegex.exec(artist)
 
-      if (!match) {
-        console.log(`Skipping "${file.fileName}". It only has one artist: ${artist}`)
-        if (options.u && !options.s) fs.moveSync(file.inputFile, file.outputFile)
-        continue
-      }
+			if (!match) {
+				console.log(`Skipping "${file.fileName}". It only has one artist: ${artist}`)
+				if (options.u && !options.s) fs.moveSync(file.inputFile, file.outputFile)
+				continue
+			}
 
-      updateTags(file, match, ignoreList, artist)
+			updateTags(file, match, ignoreList, artist)
 
-      continue
-    }
+			continue
+		}
 
-    updateTags(file, featMatch, ignoreList, artist)
-  }
+		updateTags(file, featMatch, ignoreList, artist)
+	}
 
-  await removeEmptyDirectories(inputDir)
+	await removeEmptyDirectories(inputDir)
 
-  for (const message of noArtist) {
-    console.log(message)
-  }
+	for (const message of noArtist) {
+		console.log(message)
+	}
 
-  for (const message of ignored) {
-    console.log(message)
-  }
+	for (const message of ignored) {
+		console.log(message)
+	}
 }
 
 function updateTags(
-  file: Record<string, string>,
-  match: RegExpMatchArray,
-  ignoreList: string[],
-  artist: string
+	file: Record<string, string>,
+	match: RegExpMatchArray,
+	ignoreList: string[],
+	artist: string
 ) {
-  if (shouldIgnore(ignoreList, artist)) {
-    ignored.push(
-      `Skipping "${file.fileName}". It contains an artist in your ignore list: ${artist}`
-    )
+	if (shouldIgnore(ignoreList, artist)) {
+		ignored.push(
+			`Skipping "${file.fileName}". It contains an artist in your ignore list: ${artist}`
+		)
 
-    if (options.u && !options.s && options.m) {
-      fs.moveSync(file.inputFile, file.outputFile)
-    } else if (options.u && !options.s) {
-      fs.moveSync(file.inputFile, file.ignoredFile)
-    }
+		if (options.u && !options.s && options.m) {
+			fs.moveSync(file.inputFile, file.outputFile)
+		} else if (options.u && !options.s) {
+			fs.moveSync(file.inputFile, file.ignoredFile)
+		}
 
-    return
-  }
+		return
+	}
 
-  const remainingArtists = `${match[1]}, ${match[3]}`
-  const artists = processArtists(remainingArtists)
-  const tags = { artist: artists }
+	const remainingArtists = `${match[1]}, ${match[3]}`
+	const artists = processArtists(remainingArtists)
+	const tags = {artist: artists}
 
-  fs.appendFileSync(changesFile, `${artist} -> ${artists}\n\n`)
+	fs.appendFileSync(changesFile, `${artist} -> ${artists}\n\n`)
 
-  if (options.u) {
-    id3.update(tags, file.inputFile)
+	if (options.u) {
+		id3.update(tags, file.inputFile)
 
-    if (!options.s) fs.moveSync(file.inputFile, file.outputFile)
-  }
+		if (!options.s) fs.moveSync(file.inputFile, file.outputFile)
+	}
 }
 
 function processArtists(remainingArtists: string) {
-  let artists = ""
+	let artists = ''
 
-  if (shouldRemoveSlashFromArtist(remainingArtists))
-    remainingArtists = removeSlash(remainingArtists)
+	if (shouldRemoveSlashFromArtist(remainingArtists))
+		remainingArtists = removeSlash(remainingArtists)
 
-  while (true) {
-    let match = remainingArtists.match(artistRegex)
+	while (true) {
+		let match = artistRegex.exec(remainingArtists)
 
-    if (!match) {
-      match = remainingArtists.match(/.+/)
+		if (!match) {
+			match = /.+/.exec(remainingArtists)
 
-      if (!match) {
-        break
-      }
+			if (!match) {
+				break
+			}
 
-      const artist = match[0].trim()
-      artists += artist
+			const artist = match[0].trim()
+			artists += artist
 
-      break
-    }
+			break
+		}
 
-    const artist = match[1].trim()
-    artists += `${artist}/`
+		const artist = match[1].trim()
+		artists += `${artist}/`
 
-    remainingArtists = match[3]
-  }
+		remainingArtists = match[3]
+	}
 
-  return artists
+	return artists
 }
 
 function shouldRemoveSlashFromArtist(artist: string) {
-  return artist.includes("/")
+	return artist.includes('/')
 }
 
 function removeSlash(artist: string) {
-  return (artist = artist.replace(/\//g, ""))
+	artist = artist.replace(/\//g, '')
+	return artist
 }
 
 async function getIgnoreList(): Promise<string[]> {
-  const ignore: string[] = []
-  const fileStream = fs.createReadStream(ignoreFile)
+	const ignore: string[] = []
+	const fileStream = fs.createReadStream(ignoreFile)
 
-  const rl = readline.createInterface({
-    input: fileStream,
-    crlfDelay: Infinity,
-  })
+	const rl = readline.createInterface({
+		input: fileStream,
+		crlfDelay: Number.POSITIVE_INFINITY
+	})
 
-  for await (const line of rl) {
-    ignore.push(line)
-  }
+	for await (const line of rl) {
+		ignore.push(line)
+	}
 
-  return ignore
+	return ignore
 }
 
 function shouldIgnore(ignoreList: string[], artist: string) {
-  for (const ignore of ignoreList) {
-    if (artist.toLowerCase().includes(ignore.toLowerCase())) {
-      return true
-    }
-  }
+	for (const ignore of ignoreList) {
+		if (artist.toLowerCase().includes(ignore.toLowerCase())) {
+			return true
+		}
+	}
 
-  if (options.a && shouldRemoveSlashFromArtist(artist)) return true
+	if (options.a && shouldRemoveSlashFromArtist(artist)) return true
 
-  return false
+	return false
 }
 
 async function removeEmptyDirectories(directory: string) {
-  const fileStats = await fsPromises.lstat(directory)
-  if (!fileStats.isDirectory()) {
-    return
-  }
-  let fileNames = await fsPromises.readdir(directory)
-  if (fileNames.length > 0) {
-    const recursiveRemovalPromises = fileNames.map((fileName) =>
-      removeEmptyDirectories(path.posix.join(directory, fileName))
-    )
-    await Promise.all(recursiveRemovalPromises)
+	const fileStats = await fsPromises.lstat(directory)
+	if (!fileStats.isDirectory()) {
+		return
+	}
 
-    // re-evaluate fileNames; after deleting subdirectory
-    // we may have parent directory empty now
-    fileNames = await fsPromises.readdir(directory)
-  }
+	let fileNames = await fsPromises.readdir(directory)
+	if (fileNames.length > 0) {
+		const recursiveRemovalPromises = fileNames.map(async (fileName) =>
+			removeEmptyDirectories(path.posix.join(directory, fileName))
+		)
+		await Promise.all(recursiveRemovalPromises)
 
-  if (fileNames.length === 0) {
-    await fsPromises.rmdir(directory)
-  }
+		// Re-evaluate fileNames; after deleting subdirectory
+		// we may have parent directory empty now
+		fileNames = await fsPromises.readdir(directory)
+	}
+
+	if (fileNames.length === 0) {
+		await fsPromises.rmdir(directory)
+	}
 }
 
 function test() {
-  fs.emptyDirSync(inputDir)
-  fs.emptyDirSync(outputDir)
-  fs.emptyDirSync(ignoredDir)
-  fs.outputFileSync(ignoreFile, "Ignore")
-  fs.copySync(testFiles, inputDir)
+	fs.emptyDirSync(inputDir)
+	fs.emptyDirSync(outputDir)
+	fs.emptyDirSync(ignoredDir)
+	fs.outputFileSync(ignoreFile, 'Ignore')
+	fs.copySync(testFiles, inputDir)
 }
 
 function printHelp() {
-  console.log(`
+	console.log(`
   Options:
 
   -i, --input <path>    specify a folder that contains your input files

@@ -4,14 +4,14 @@ Changes artist tags in bulk on mp3 files (or anything with ID3 tags) to the "pro
 
 Music apps will often list the same artist as a separate artist if a particular track has multiple artists. For example, say you have a track by `Artist 1` and another track by `Artist 1 & Artist 2`. If you wanted to look at all the tracks by `Artist 1`, the track by `Artist 1 & Artist 2` wouldn't show up and would be under its own artist entry.
 
-This app fixes that by changing the artist tag to a list of artists seperated by forward slashes. e.g. `Artist 1/Artist 2`.
+This app fixes that by changing the artist tag to a list of artists separated by forward slashes. e.g. `Artist 1/Artist 2`.
 
 ## Installation
 
 1. Clone the repo.
 
 ```
-git clone https://github.com/adamhl8/mp3-fix-artist-tags.git
+git clone https://github.com/Genshii8/format-mp3-artist-tags.git
 ```
 
 2. Install dependencies.
@@ -23,16 +23,16 @@ yarn install
 3. Build the app.
 
 ```
-yarn launch
+yarn start
 ```
 
 ## Usage
 
 ### Run the app
 
-1. Place files to be processed in "format-mp3-artist-tags/app/files". (Please see below for the available command line options.)
+1. Place files to be processed in `app/files`. (Please see below for the available command line options.)
 
-2. Generate list of changes ("changes.txt") and view the file to make sure everything is good to go or if anything needs to be ignored. Running the app without the `-u` flag will not make any changes to or move your files.
+2. Generate list of changes (`changes.txt`) and view the file to make sure everything is good to go or if anything needs to be ignored. Running the app without the `-u` flag will not make any changes to or move your files.
 
 ```
 yarn start
@@ -95,7 +95,7 @@ Some notes about how this app functions:
 - Using the `-o` flag without specifying a directory will move files to a directory named "processed" next to your input directory.
 - Using the `-t` flag will **permanently delete all files in the input, output and ignored directories** (either the default directories or the ones defined with `-i`/`-o`).
 
-This app assumes artists will be seperated by a `&`, `x`, `×`, `+`, `,`, `and`, or `with`. It also grabs any `feat.` artists included in the artist tag.
+This app assumes artists will be separated by a `&`, `x`, `×`, `+`, `,`, `and`, or `with`. It also grabs any `feat.` artists included in the artist tag.
 
 ```
 Artist 1 & Artist 2 x Artist 3 × Artist 4 feat. Artist 1 + Artist 2, Artist 3 and Artist 4
@@ -103,4 +103,4 @@ Artist 1 & Artist 2 x Artist 3 × Artist 4 feat. Artist 1 + Artist 2, Artist 3 a
 Artist 1/Artist 2/Artist 3/Artist 4/Artist 1/Artist 2/Artist 3/Artist 4
 ```
 
-Note: If you look at the tags of a processed file via something like Windows Explorer (or a tag editor like Mp3tag), you will see artists seperated by semicolons, not slashes. This is normal. The artists are still separated by slashes in the actual tag data.
+Note: If you look at the tags of a processed file via something like Windows Explorer (or a tag editor like Mp3tag), you will see artists separated by semicolons, not slashes. This is normal. The artists are still separated by slashes in the actual tag data.
