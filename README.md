@@ -11,19 +11,13 @@ This app fixes that by changing the artist tag to a list of artists separated by
 1. Clone the repo.
 
 ```
-git clone https://github.com/Genshii8/format-mp3-artist-tags.git
+git clone https://github.com/adamhl8/format-mp3-artist-tags.git
 ```
 
 2. Install dependencies.
 
 ```
 yarn install
-```
-
-3. Build the app.
-
-```
-yarn start
 ```
 
 ## Usage
@@ -83,6 +77,7 @@ Options:
 ```
 
 Generally speaking, if you want to specify an input directory, the command you run will look something like this:
+
 ```
 yarn start -i /path/to/directory/ -o -u
 ```
