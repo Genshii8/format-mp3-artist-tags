@@ -356,7 +356,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/fs-extra@npm:^9.0.11":
+"@types/fs-extra@npm:^9.0.12":
   version: 9.0.12
   resolution: "@types/fs-extra@npm:9.0.12"
   dependencies:
@@ -379,7 +379,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mri@npm:^1.1.0":
+"@types/mri@npm:^1.1.1":
   version: 1.1.1
   resolution: "@types/mri@npm:1.1.1"
   checksum: cb875d88f4fa9345c7520c03d321a23dc72777a3804bbaf622f02b18269f0e6516b0bbc44541b39fce4e867ca3f8a9ea2a344912251a8fd1082dc6d4863a7087
@@ -1213,8 +1213,8 @@ __metadata:
   resolution: "format-mp3-artist-tags@workspace:."
   dependencies:
     "@types/eslint": ^7.28.0
-    "@types/fs-extra": ^9.0.11
-    "@types/mri": ^1.1.0
+    "@types/fs-extra": ^9.0.12
+    "@types/mri": ^1.1.1
     "@types/node": ^16.3.2
     "@types/prettier": ^2.3.2
     "@typescript-eslint/eslint-plugin": ^4.28.3
