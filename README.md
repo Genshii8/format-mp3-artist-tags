@@ -17,7 +17,7 @@ git clone https://github.com/adamhl8/format-mp3-artist-tags.git
 2. Install dependencies.
 
 ```
-yarn install
+pnpm i
 ```
 
 ## Usage
@@ -29,13 +29,13 @@ yarn install
 2. Generate list of changes (`changes.txt`) and view the file to make sure everything is good to go or if anything needs to be ignored. Running the app without the `-u` flag will not make any changes to or move your files.
 
 ```
-yarn start
+pnpm start
 ```
 
 3. Apply changes.
 
 ```
-yarn start -u
+pnpm start -u
 ```
 
 ### "app" folder
@@ -79,7 +79,7 @@ Options:
 Generally speaking, if you want to specify an input directory, the command you run will look something like this:
 
 ```
-yarn start -i /path/to/directory/ -o -u
+pnpm start -i /path/to/directory/ -o -u
 ```
 
 Some notes about how this app functions:
