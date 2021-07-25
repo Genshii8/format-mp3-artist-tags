@@ -1,12 +1,9 @@
 import fs from 'fs-extra'
-// eslint-disable-next-line unicorn/prefer-node-protocol
-import fsPromises from 'fs/promises'
 import mri from 'mri'
 import id3 from 'node-id3'
-// eslint-disable-next-line unicorn/prefer-node-protocol
-import path from 'path'
-// eslint-disable-next-line unicorn/prefer-node-protocol
-import readline from 'readline'
+import fsPromises from 'node:fs/promises'
+import path from 'node:path'
+import readline from 'node:readline'
 import walk from 'walk-sync'
 
 const mriOptions = {
@@ -146,11 +143,13 @@ function processArtists(remainingArtists: string) {
 
   if (shouldRemoveSlashFromArtist(remainingArtists)) remainingArtists = removeSlash(remainingArtists)
 
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
+  let shouldContinue = true
+  while (shouldContinue) {
     const match = artistRegex.exec(remainingArtists)
 
     if (!match) {
+      shouldContinue = false
+
       const matchRemainingArtist = /.+/.exec(remainingArtists)
 
       if (!matchRemainingArtist) break

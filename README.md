@@ -35,7 +35,7 @@ pnpm start
 3. Apply changes.
 
 ```
-pnpm start -u
+pnpm start -- -u
 ```
 
 ### "app" folder
@@ -79,7 +79,7 @@ Options:
 Generally speaking, if you want to specify an input directory, the command you run will look something like this:
 
 ```
-pnpm start -i /path/to/directory/ -o -u
+pnpm start -- -i /path/to/directory/ -o -u
 ```
 
 Some notes about how this app functions:
